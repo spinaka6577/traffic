@@ -21,12 +21,13 @@ class HeroService
     private SerializerInterface $serializer;
     private EntityManagerInterface $em;
     private $url;
-
-    public function __construct(SerializerInterface $serializer, EntityManagerInterface $em)
+    private $cacert;
+    public function __construct(SerializerInterface $serializer, EntityManagerInterface $em, $cacert, $swapi)
     {
         $this->serializer = $serializer;
         $this->em = $em;
-        $this->url = "https://swapi.dev/api/";
+        $this->url = $swapi;
+        $this->cacert = $cacert;
     }
 
     public function get()
@@ -35,7 +36,7 @@ class HeroService
         for ($i = 1; $i <= 83; $i++) {
             try {
                 $client = new Client([
-                    'verify' => 'C:/cacert.pem',
+                    'verify' => $this->cacert,
                     'base_uri' => $this->url,
                     'exceptions' => false
                 ]);
@@ -86,7 +87,7 @@ class HeroService
         }
         foreach ($relations as $relationUrl) {
             $client = new Client([
-                'verify' => 'C:/cacert.pem',
+                'verify' => $this->cacert,
                 'base_uri' => $this->url
             ]);
 
